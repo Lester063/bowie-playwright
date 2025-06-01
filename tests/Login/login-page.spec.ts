@@ -11,7 +11,7 @@ test.describe('Login', () => {
         await test.step('Then I should see the login page', async () => {
             //Assert URL
             await loginPage.assertURL('/login');
-            await loginPage.assertRoleWithText(Locators.mainHeading, 'Login');
+            await loginPage.assertText('h1', 'Login');
         })
     });
 
@@ -29,10 +29,10 @@ test.describe('Login', () => {
             await loginPage.triggerLoginButton();
         });
         await test.step('Then I should be able to login successfully', async () => {
-            await loginPage.validateLoadingIsNotVIsible();
+            await loginPage.validateLoadingIsNotVisible();
             //Assert Dashboard
             await loginPage.assertURL('/');
-            await loginPage.assertRoleWithText(Locators.mainHeading, 'Home');
+            await loginPage.assertText('h1', 'Home');
         });
     });
 
@@ -48,10 +48,10 @@ test.describe('Login', () => {
             await loginPage.triggerLoginButton();
         });
         await test.step('Then an error message should be displayed', async () => {
-            await loginPage.validateLoadingIsNotVIsible();
+            await loginPage.validateLoadingIsNotVisible();
             //Assert Dashboard
             await loginPage.assertURL('/login');
-            await loginPage.assertRoleWithText(Locators.errorMessage, 'Invalid Credentials');
+            await loginPage.assertText(Locators.errorMessage, 'Invalid Credentials');
         });
     });
 });
@@ -65,15 +65,17 @@ test.describe('Logout', () => {
             await loginPage.goto();
             await loginPage.inputCredentials(email, password);
             await loginPage.triggerLoginButton();
-            await loginPage.assertURL('/login');
-            await loginPage.assertRoleWithText(Locators.mainHeading, 'Home');
+            await loginPage.validateLoadingIsNotVisible();
+            await loginPage.assertURL('/');
+            await loginPage.assertText('h1', 'Home');
         });
         await test.step('When I click the Logout button' , async () => {
-            await loginPage.clickLocator(Locators.navigationLink, 'Logout');
+            await loginPage.clickLocatorWithText(Locators.navigationLink, 'Logout');
         });
         await test.step('Then I should be navigated to login page ' , async () => {
+            await loginPage.validateLoadingIsNotVisible();
             await loginPage.assertURL('/login');
-            await loginPage.assertRoleWithText(Locators.mainHeading, 'Login');
+            await loginPage.assertText('h1', 'Login');
         });
     })
 })
