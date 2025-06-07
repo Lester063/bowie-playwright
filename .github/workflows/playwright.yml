@@ -74,11 +74,11 @@ jobs:
         working-directory: ./bowie-api
 
       - name: Run Laravel migrations and seed database
-        run: php artisan migrate:fresh --seed --force
+        run: php artisan migrate:refresh --seed --force
         working-directory: ./bowie-api
 
       - name: Start Laravel backend
-        run: php artisan serve --host=0.0.0.0 --port=8000 &
+        run: php artisan serve --host=0.0.0.0 --port=8000 & 
         working-directory: ./bowie-api
         env:
           DB_HOST: 127.0.0.1
@@ -88,7 +88,7 @@ jobs:
           DB_PASSWORD: root
 
       - name: Start React frontend
-        run: npm start &
+        run: npm start & 
         working-directory: ./bowie-react
 
       - name: Wait for Laravel backend to be ready
