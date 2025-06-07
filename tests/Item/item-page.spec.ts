@@ -16,6 +16,7 @@ test.describe('Test Item page', () => {
             //Assert Dashboard
             //await pageObject.assertURL('/');
             await expect(page.getByText('Invalid Credentials')).not.toBeVisible();
+            await page.screenshot({ path: 'screenshot.png' });
             await pageObject.assertText('h1', 'Home');
         });
         await test.step('When I click the Item on navigation bar', async () => {
