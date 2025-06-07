@@ -16,7 +16,6 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: bowieapi
-          # MYSQL_USER and MYSQL_PASSWORD removed for root user
         ports:
           - 3306:3306
         options: >-
@@ -69,6 +68,9 @@ jobs:
           sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
         working-directory: ./bowie-api
 
+      - name: Debug .env file
+        run: cat ./bowie-api/.env  # Debug step to ensure the .env file is correct
+
       - name: Generate Laravel app key
         run: php artisan key:generate
         working-directory: ./bowie-api
@@ -78,7 +80,7 @@ jobs:
         working-directory: ./bowie-api
 
       - name: Start Laravel backend
-        run: php artisan serve --host=0.0.0.0 --port=8000 & 
+        run: php artisan serve --host=0.0.0.0 --port=8000 &
         working-directory: ./bowie-api
         env:
           DB_HOST: 127.0.0.1
@@ -88,7 +90,7 @@ jobs:
           DB_PASSWORD: root
 
       - name: Start React frontend
-        run: npm start & 
+        run: npm start &
         working-directory: ./bowie-react
 
       - name: Wait for Laravel backend to be ready
