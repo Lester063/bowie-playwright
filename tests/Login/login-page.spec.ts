@@ -17,8 +17,8 @@ test.describe('Login', () => {
 
     test('User should be able to login', async ({page}) => {
         const pageObject = new PageObject(page);
-        const email = process.env.TEST_USER_EMAIL!;
-        const password = process.env.TEST_USER_PASSWORD!;
+        const email = 'lester@gmail.com';
+        const password = 'lester123';
         await test.step('Given I navigate to login page', async () => {
             await pageObject.goto();
         });
@@ -59,8 +59,8 @@ test.describe('Login', () => {
 test.describe('Logout', () => {
     test('I should be able to Logout', async ({page}) => {
         const pageObject = new PageObject(page);
-        const email = process.env.TEST_USER_EMAIL!;
-        const password = process.env.TEST_USER_PASSWORD!;
+        const email = 'lester@gmail.com';
+        const password = 'lester123';
         await test.step('Given I am logged in' , async () => {
             await pageObject.goto();
             await pageObject.inputCredentials(email, password);

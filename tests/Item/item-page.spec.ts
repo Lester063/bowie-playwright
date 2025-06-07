@@ -6,8 +6,8 @@ test.describe('Test Item page', () => {
     let itemCode: string;
     test('Navigate to Item page', async ({ page }) => {
         const pageObject = new PageObject(page);
-        const email = process.env.TEST_USER_EMAIL!;
-        const password = process.env.TEST_USER_PASSWORD!;
+        const email = 'lester@gmail.com';
+        const password = 'lester123';
         await test.step('Given I am logged in', async () => {
             await pageObject.goto();
             await pageObject.inputCredentials(email, password);
@@ -31,8 +31,8 @@ test.describe('Test Item page', () => {
 
     test('Create Item', async ({ page }) => {
         const pageObject = new PageObject(page);
-        const email = process.env.TEST_USER_EMAIL!;
-        const password = process.env.TEST_USER_PASSWORD!;
+        const email = 'lester@gmail.com';
+        const password = 'lester123';
         await test.step('Given I am logged in', async () => {
             await pageObject.goto();
             await pageObject.inputCredentials(email, password);
@@ -84,8 +84,8 @@ test.describe('Test Item page', () => {
 
     test('Edit Item', async ({ page }) => {
         const pageObject = new PageObject(page);
-        const email = process.env.TEST_USER_EMAIL!;
-        const password = process.env.TEST_USER_PASSWORD!;
+        const email = 'lester@gmail.com';
+        const password = 'lester123';
         await test.step('Given I am logged in', async () => {
             await pageObject.goto();
             await pageObject.inputCredentials(email, password);
@@ -133,8 +133,8 @@ test.describe('Test Item page', () => {
 
     test('Request Item', async ({ page }) => {
         const pageObject = new PageObject(page);
-        const email = process.env.TEST_USER_EMAIL!;
-        const password = process.env.TEST_USER_PASSWORD!;
+        const email = 'lester@gmail.com';
+        const password = 'lester123';
         await test.step('Given I am logged in', async () => {
             await pageObject.goto();
             await pageObject.inputCredentials(email, password);
@@ -178,8 +178,8 @@ test.describe('Test Item page', () => {
 
     test('Delete Item', async ({ page }) => {
         const pageObject = new PageObject(page);
-        const email = process.env.TEST_USER_EMAIL!;
-        const password = process.env.TEST_USER_PASSWORD!;
+        const email = 'lester@gmail.com';
+        const password = 'lester123';
         await test.step('Given I am logged in', async () => {
             await pageObject.goto();
             await pageObject.inputCredentials(email, password);
