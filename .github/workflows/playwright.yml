@@ -101,11 +101,9 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-        working-directory: ./bowie-playwright  # Ensure this is in the right directory
 
       - name: Run Playwright tests
         run: npm run test:e2e
-        working-directory: ./bowie-playwright  # Tests should be run from the Playwright directory
 
       - name: Upload Playwright test report (on failure)
         if: failure()
