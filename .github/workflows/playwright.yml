@@ -16,8 +16,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: bowieapi
-          MYSQL_USER: root
-          MYSQL_PASSWORD: root
+          # Removed MYSQL_USER and MYSQL_PASSWORD here
         ports:
           - 3306:3306
         options: >-
