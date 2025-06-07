@@ -22,13 +22,7 @@ export class PageObject {
 
   //Click button with inner name Login
   async triggerLoginButton() {
-    //await this.page.getByRole('button', { name: 'Login' }).click();
-    await Promise.all([
-    this.page.waitForResponse(resp =>
-      resp.url().includes('/login') && resp.status() === 200
-    ),
-    this.page.getByRole('button', { name: 'Login' }).click()
-  ]);
+    await this.page.getByRole('button', { name: 'Login' }).click();
   }
 
   //Validate that the current page URL matches the URL passed on a parameter.
