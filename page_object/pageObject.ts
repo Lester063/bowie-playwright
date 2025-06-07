@@ -32,7 +32,7 @@ export class PageObject {
 
   //Validate text on the locator
   async assertText(locator: string, text: string) {
-    await expect(this.page.locator(locator)).toHaveText(text);
+    await expect(this.page.locator(locator)).toHaveText(text, { timeout: 5000 });
   }
 
   //Click locator with text based on the parameter passed
