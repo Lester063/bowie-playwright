@@ -16,7 +16,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: bowieapi
-          # Removed MYSQL_USER and MYSQL_PASSWORD here
+          # MYSQL_USER and MYSQL_PASSWORD removed for root user
         ports:
           - 3306:3306
         options: >-
@@ -26,8 +26,20 @@ jobs:
           --health-retries 3
 
     steps:
-      - name: Checkout code
+      - name: Checkout Playwright repo
         uses: actions/checkout@v4
+
+      - name: Checkout Laravel API repo
+        uses: actions/checkout@v4
+        with:
+          repository: Lester063/bowie-api
+          path: bowie-api
+
+      - name: Checkout React repo
+        uses: actions/checkout@v4
+        with:
+          repository: Lester063/bowie-react
+          path: bowie-react
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
