@@ -62,9 +62,8 @@ jobs:
       - name: Copy Laravel .env for CI
         run: |
           cp .env.example .env
-          # Ensure DB_DATABASE is 'bowieapi' instead of the default 'laravel'
           sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' .env
-          sed -i 's/DB_DATABASE=laravel/DB_DATABASE=bowieapi/' .env  # Change from 'laravel' to 'bowieapi'
+          sed -i 's/DB_DATABASE=laravel/DB_DATABASE=bowieapi/' .env
           sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
           sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
         working-directory: ./bowie-api
@@ -102,9 +101,11 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+        working-directory: ./bowie-playwright  # Ensure this is in the right directory
 
       - name: Run Playwright tests
         run: npm run test:e2e
+        working-directory: ./bowie-playwright  # Tests should be run from the Playwright directory
 
       - name: Upload Playwright test report (on failure)
         if: failure()
