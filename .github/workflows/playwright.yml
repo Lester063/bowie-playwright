@@ -80,7 +80,7 @@ jobs:
         working-directory: ./bowie-api
 
       - name: Start Laravel backend
-        run: php artisan serve
+        run: php artisan serve --host=0.0.0.0 --port=8000 &
         working-directory: ./bowie-api
         env:
           DB_HOST: 127.0.0.1
