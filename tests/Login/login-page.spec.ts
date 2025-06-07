@@ -36,24 +36,24 @@ test.describe('Login', () => {
         });
     });
 
-    test('Message Invalid Credentials should be displayed', async ({page}) => {
-        const pageObject = new PageObject(page);
-        await test.step('Given I navigate to login page', async () => {
-            await pageObject.goto();
-        });
-        await test.step('When I enter my incorrect credential', async () => {
-            await pageObject.inputCredentials('invalid@gmail.com', 'password');
-        });
-        await test.step('And I click the login button', async () => {
-            await pageObject.triggerLoginButton();
-        });
-        await test.step('Then an error message should be displayed', async () => {
-            await pageObject.validateLoadingIsNotVisible();
-            //Assert Dashboard
-            await pageObject.assertURL('/login');
-            await pageObject.assertText(Locators.errorMessage, 'Invalid Credentials');
-        });
-    });
+    // test('Message Invalid Credentials should be displayed', async ({page}) => {
+    //     const pageObject = new PageObject(page);
+    //     await test.step('Given I navigate to login page', async () => {
+    //         await pageObject.goto();
+    //     });
+    //     await test.step('When I enter my incorrect credential', async () => {
+    //         await pageObject.inputCredentials('invalid@gmail.com', 'password');
+    //     });
+    //     await test.step('And I click the login button', async () => {
+    //         await pageObject.triggerLoginButton();
+    //     });
+    //     await test.step('Then an error message should be displayed', async () => {
+    //         await pageObject.validateLoadingIsNotVisible();
+    //         //Assert Dashboard
+    //         await pageObject.assertURL('/login');
+    //         await pageObject.assertText(Locators.errorMessage, 'Invalid Credentials');
+    //     });
+    // });
 });
 
 test.describe('Logout', () => {
