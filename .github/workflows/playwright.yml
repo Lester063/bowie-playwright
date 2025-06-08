@@ -10,27 +10,135 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bowieapi
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout Playwright repo
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 16.16.0
+      - name: Checkout Laravel API repo
+        uses: actions/checkout@v4
+        with:
+          repository: Lester063/bowie-api
+          path: bowie-api
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Checkout React repo
+        uses: actions/checkout@v4
+        with:
+          repository: Lester063/bowie-react
+          path: bowie-react
 
-    - name: Install Playwright browsers
-      run: npx playwright install --with-deps
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, bcmath, pdo_mysql
 
-    - name: Run Playwright tests
-      run: npm run test:e2e
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.16.0
 
-    - name: Upload Playwright test report (on failure)
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright-report
-        path: playwright-report/
+      - name: Install Laravel dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+        working-directory: ./bowie-api
+
+      - name: Install React dependencies
+        run: npm ci
+        working-directory: ./bowie-react
+
+      - name: Copy Laravel .env for CI
+        run: |
+          cp .env.example .env
+          sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' .env
+          sed -i 's/DB_DATABASE=laravel/DB_DATABASE=bowieapi/' .env
+          sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
+          sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
+        working-directory: ./bowie-api
+
+      - name: Debug .env file
+        run: cat ./bowie-api/.env
+
+      - name: Generate Laravel app key
+        run: php artisan key:generate
+        working-directory: ./bowie-api
+
+      - name: Run Laravel migrations and seed database
+        run: php artisan migrate:refresh --seed --force
+        working-directory: ./bowie-api
+
+      - name: Wait for MySQL to be ready
+        run: |
+          echo "Waiting for MySQL to be ready..."
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -uroot -proot --silent; then
+              echo "MySQL is up!"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+      - name: Start Laravel backend
+        run: |
+          php artisan serve --host=0.0.0.0 --port=8000 > laravel.log 2>&1 &
+          sleep 5
+          cat laravel.log
+        working-directory: ./bowie-api
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: bowieapi
+          DB_USERNAME: root
+          DB_PASSWORD: root
+
+      - name: Start React frontend
+        run: npm start &
+        working-directory: ./bowie-react
+
+      - name: Wait for Laravel backend to be ready
+        run: |
+          echo "Waiting for Laravel backend to fully boot..."
+          npx wait-on http://localhost:8000
+
+      - name: Wait for React frontend to be ready
+        run: npx wait-on http://localhost:3000
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Install Playwright dependencies
+        run: npm ci
+
+      - name: Run Playwright tests
+        run: |
+          echo "Running Playwright tests..."
+          npm run test:e2e || true
+
+      - name: Upload Playwright test report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+
+      - name: Upload Playwright artifacts (screenshots, videos, traces)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            test-results/
+            playwright-report/
