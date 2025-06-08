@@ -94,7 +94,10 @@ jobs:
         working-directory: ./bowie-react
 
       - name: Wait for Laravel backend to be ready
-        run: npx wait-on http://localhost:8000
+        run: |
+          echo "Waiting for Laravel backend to fully boot..."
+          npx wait-on http://localhost:8000/api/status || \
+          npx wait-on http://localhost:8000
 
       - name: Wait for React frontend to be ready
         run: npx wait-on http://localhost:3000
